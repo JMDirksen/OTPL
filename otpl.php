@@ -7,7 +7,7 @@
   if(!file_exists($jsonFile)) file_put_contents($jsonFile,"[]");
   
   $generateForm = isset($_GET['generate']) ? true : false;
-  $showPassword = isset($_GET['id']) ? true : false;
+  $requestPassword = isset($_GET['id']) ? true : false;
 
   if(isset($_POST['password'])) {
     $password = $_POST['password'];
@@ -17,10 +17,14 @@
     $link = generateLink($id);
   }
   
-  if($showPassword) {
+  if($requestPassword) {
     $password = getPassword($_GET['id']);
     if($password !== null) {
       removeRecord($_GET['id']);
+      $showPassword = true;
+    }
+    else {
+      $error = "Your password is not available anymore. The password links can only be used once.<br/>Did you not use the link before? Then probably someone viewed the password before you, place contact us to request a new password.";
     }
   }
   
@@ -28,21 +32,25 @@
 
 <html>
   <head>
-    <title>Password</title>
+    <title>One Time Password Link</title>
   </head>
   <body>
-    <h1>Password</h1>
     
     <?php if($generateForm) { ?>
+      <h1>Generate Password Link</h1>
       <form method="post"><input type="text" name="password"> <input type="submit" value="Generate Link"></form>
     <?php } if(isset($link)) { ?>
       <textarea cols="110" onfocus="this.select();"><?php echo $link; ?></textarea>
     <?php } ?>
     
-    <?php if($showPassword) { ?>
-      <textarea cols="110" onfocus="this.select();"><?php echo $password; ?></textarea>
+    <?php if(isset($showPassword)) { ?>
+      <h1>Your Password</h1>
+      Make sure to store your password safely.<br/><br/>
+      <textarea cols="110" onfocus="this.select();"><?php echo $password; ?></textarea><br/><br/>
+      The password has been removed permanently, after leaving this page you won't be able to show the password again.<br/>
     <?php } ?>
     
+    <?php if(isset($error)) echo $error; ?>
     
   </body>
 </html>
