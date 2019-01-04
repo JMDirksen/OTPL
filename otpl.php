@@ -1,12 +1,7 @@
 <?php
 
 // Config
-$email = 'admin@domain.com';
-$title = 'One Time Password Link';
-$logo = '';
-$cssFile = 'otpl.css';
-$expireDays = 7;
-$jsonFile = 'otpl.json';
+require('otpl.config.php');
 
 // Init
 if(!file_exists($jsonFile)) file_put_contents($jsonFile,"[]");
