@@ -85,7 +85,7 @@
   
   function storeDatabase($db) {
     global $jsonFile;
-    file_put_contents($jsonFile, json_encode($db));
+    file_put_contents($jsonFile, json_encode(array_values($db)));
   }
   
   function generateLink($id) {
