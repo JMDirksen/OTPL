@@ -73,12 +73,23 @@
     addRecord(array('id' => $id, 'password' => $password, 'expires' => $expires));
   }
 
-  function addRecord($array) {
+  function loadDatabase() {
     global $jsonFile;
     $json = file_get_contents($jsonFile);
     $db = json_decode($json);
-    array_push($db, $array);
+    //die(print_r($db));
+    return $db;
+  }
+  
+  function storeDatabase($db) {
+    global $jsonFile;
     file_put_contents($jsonFile, json_encode($db));
+  }
+  
+  function addRecord($array) {
+    $db = loadDatabase();
+    array_push($db, $array);
+    storeDatabase($db);
   }
 
   function generateLink($id) {
@@ -92,9 +103,7 @@
   }
 
   function getRecord($id) {
-    global $jsonFile;
-    $json = file_get_contents($jsonFile);
-    $db = json_decode($json);
+    $db = loadDatabase();
     $record = null;
     foreach($db as $r) {
       if ($r->id == $id) {
@@ -106,16 +115,14 @@
   }
 
   function removeRecord($id) {
-    global $jsonFile;
-    $json = file_get_contents($jsonFile);
-    $db = json_decode($json, true);
+    $db = loadDatabase();
     $key = null;
     foreach($db as $k => $v) {
-      if ($v['id'] == $id) {
+      if ($v->id == $id) {
           $key = $k;
           break;
       }
     }
     unset($db[$key]);
-    file_put_contents($jsonFile, json_encode($db));
+    storeDatabase($db);
   }
