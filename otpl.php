@@ -10,6 +10,7 @@
 
   // Init
   if(!file_exists($jsonFile)) file_put_contents($jsonFile,"[]");
+  removeExpired($expireDays);
   $content = null;
   if($logo) $content .= '<img src="' . $logo . '">';
   
@@ -62,6 +63,16 @@
 </html>
 <?php
 
+  function removeExpired($expireDays) {
+    $today = strtotime(date("Y-m-d"));
+    $db = loadDatabase();
+    foreach($db as $record) {
+      if (strtotime($record->expires) < $today) {
+        removeRecord($record->id);
+      }
+    }
+  }
+  
   function generateRandomString($length = 32) {
       $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
       $charactersLength = strlen($characters);
