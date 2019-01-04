@@ -2,59 +2,51 @@
   // Config
   $jsonFile = 'otpl.json';
   $expireDays = 7;
+  $title = "One Time Password Link";
 
   // Init
   if(!file_exists($jsonFile)) file_put_contents($jsonFile,"[]");
+  $content = null;
   
-  $generateForm = isset($_GET['generate']) ? true : false;
-  $requestPassword = isset($_GET['id']) ? true : false;
-
-  if(isset($_POST['password'])) {
-    $password = $_POST['password'];
-    $id = generateRandomString();
-    $expires = date("Y-m-d", strtotime("+$expireDays day"));
-    addPassword($id, $password, $expires);
-    $link = generateLink($id);
+  // Generate Link Form
+  if (isset($_GET['generate'])) {
+    $content .= '<h1>Generate Password Link</h1>';
+    $content .= '<form method="post"><input type="text" name="password"> <input type="submit" value="Generate Link"></form>';
+    if(isset($_POST['password'])) {
+      $password = $_POST['password'];
+      $id = generateRandomString();
+      $expires = date("Y-m-d", strtotime("+$expireDays day"));
+      addPassword($id, $password, $expires);
+      $link = generateLink($id);
+      $content .= '<textarea cols="110" onfocus="this.select();">' . $link . '</textarea>';
+    }
   }
   
-  if($requestPassword) {
+  // Request Password
+  if(isset($_GET['id'])) {
     $password = getPassword($_GET['id']);
     if($password !== null) {
       removeRecord($_GET['id']);
-      $showPassword = true;
+      $content .= '<h1>Your Password</h1>';
+      $content .= 'Make sure to store your password safely.<br/><br/>';
+      $content .= '<textarea cols="110" onfocus="this.select();">' . $password . '</textarea><br/><br/>';
+      $content .= 'The password has been removed permanently, after leaving this page you won\'t be able to show the password again.<br/>';
     }
     else {
-      $error = "Your password is not available anymore. The password links can only be used once.<br/>Did you not use the link before? Then probably someone viewed the password before you, place contact us to request a new password.";
+      $content .= '<h1>Password Unavailable</h1>';
+      $content .= 'Your password is not available anymore. The password links can only be used once.<br/>Did you not use the link before? Then probably someone viewed the password before you, place contact us to request a new password.';
     }
   }
   
 ?>
-
 <html>
   <head>
-    <title>One Time Password Link</title>
+    <title><?php echo $title; ?></title>
   </head>
   <body>
-    
-    <?php if($generateForm) { ?>
-      <h1>Generate Password Link</h1>
-      <form method="post"><input type="text" name="password"> <input type="submit" value="Generate Link"></form>
-    <?php } if(isset($link)) { ?>
-      <textarea cols="110" onfocus="this.select();"><?php echo $link; ?></textarea>
-    <?php } ?>
-    
-    <?php if(isset($showPassword)) { ?>
-      <h1>Your Password</h1>
-      Make sure to store your password safely.<br/><br/>
-      <textarea cols="110" onfocus="this.select();"><?php echo $password; ?></textarea><br/><br/>
-      The password has been removed permanently, after leaving this page you won't be able to show the password again.<br/>
-    <?php } ?>
-    
-    <?php if(isset($error)) echo $error; ?>
-    
+    <?php echo $content; ?>
   </body>
 </html>
-
 <?php
 
 function generateRandomString($length = 64) {
