@@ -1,58 +1,65 @@
 <?php
 
   // Config
-  $jsonFile = 'otpl.json';
-  $expireDays = 7;
+  $email = 'admin@domain.com';
   $title = 'One Time Password Link';
-  $logo = 'logo.png';
+  $logo = '';
+  $cssFile = 'otpl.css';
+  $expireDays = 7;
+  $jsonFile = 'otpl.json';
 
   // Init
   if(!file_exists($jsonFile)) file_put_contents($jsonFile,"[]");
   $content = null;
+  if($logo) $content .= '<img src="' . $logo . '">';
   
+  // Request Password
+  if(isset($_GET['id'])) {
+    $password = getPassword($_GET['id']);
+    $width = strlen($password) + 2;
+    if($password !== null) {
+      removeRecord($_GET['id']);
+      $content .= '<h2>Your Password</h2>';
+      $content .= 'Make sure to store your password safely.<br/><br/>';
+      $content .= '<textarea cols="' . $width . '" onfocus="this.select();">' . $password . '</textarea><br/><br/>';
+      $content .= 'The password has been removed permanently, after leaving this page you won\'t be able to show the password again.<br/>';
+    }
+    else {
+      $content .= '<h2>Password Unavailable</h2>';
+      $content .= 'Your password is not available anymore.<br/>';
+      $content .= 'The password links can only be used once and will expire after ' . $expireDays . ' days.<br/>';
+      $content .= 'Place contact <a href="mailto:' . $email . '" target="_blank">' . $email . '</a> to request a new password.';
+    }
+  }
+
   // Generate Link Form
-  if (isset($_GET['generate'])) {
-    $content .= '<h1>Generate Password Link</h1>';
-    $content .= '<form method="post"><input type="text" name="password"> <input type="submit" value="Generate Link"></form>';
+  else {
+    $content .= '<h2>Generate Password Link</h2>';
+    $content .= '<form method="post"><input type="text" name="password" placeholder="password" required> <input type="submit" value="Generate Link"></form>';
     if(isset($_POST['password'])) {
       $password = $_POST['password'];
       $id = generateRandomString();
       $expires = date("Y-m-d", strtotime("+$expireDays day"));
       addPassword($id, $password, $expires);
       $link = generateLink($id);
-      $content .= '<textarea cols="110" onfocus="this.select();">' . $link . '</textarea>';
+      $width = strlen($link) + 2;
+      $content .= '<textarea cols="' . $width . '" onfocus="this.select();">' . $link . '</textarea>';
     }
   }
-  
-  // Request Password
-  if(isset($_GET['id'])) {
-    $password = getPassword($_GET['id']);
-    if($password !== null) {
-      removeRecord($_GET['id']);
-      $content .= '<h1>Your Password</h1>';
-      $content .= 'Make sure to store your password safely.<br/><br/>';
-      $content .= '<textarea cols="110" onfocus="this.select();">' . $password . '</textarea><br/><br/>';
-      $content .= 'The password has been removed permanently, after leaving this page you won\'t be able to show the password again.<br/>';
-    }
-    else {
-      $content .= '<h1>Password Unavailable</h1>';
-      $content .= 'Your password is not available anymore. The password links can only be used once.<br/>Did you not use the link before? Then probably someone viewed the password before you, place contact us to request a new password.';
-    }
-  }
-  
+
 ?>
 <html>
   <head>
     <title><?php echo $title; ?></title>
+    <link rel="stylesheet" type="text/css" href="<?php echo $cssFile; ?>">
   </head>
   <body>
-    <img src="<?php echo $logo; ?>">
     <?php echo $content; ?>
   </body>
 </html>
 <?php
 
-  function generateRandomString($length = 64) {
+  function generateRandomString($length = 32) {
       $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
       $charactersLength = strlen($characters);
       $randomString = '';
@@ -112,4 +119,3 @@
     unset($db[$key]);
     file_put_contents($jsonFile, json_encode($db));
   }
-
