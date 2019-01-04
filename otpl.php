@@ -38,7 +38,7 @@ else {
   if(isset($_POST['password'])) {
     $password = $_POST['password'];
     $id = generateRandomString();
-    $expires = date("Y-m-d", strtotime("+$expireDays day"));
+    $expires = date("Y-m-d H:i", strtotime("+$expireDays day"));
     addPassword($id, $password, $expires);
     $link = generateLink($id);
     $width = strlen($link) + 2;
@@ -59,7 +59,7 @@ else {
 <?php
 
 function removeExpired($expireDays) {
-  $today = strtotime(date("Y-m-d"));
+  $today = strtotime(date("Y-m-d H:i"));
   $db = loadDatabase();
   foreach($db as $record) {
     if (strtotime($record->expires) < $today) {
