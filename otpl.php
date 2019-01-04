@@ -13,17 +13,19 @@
   $content = null;
   if($logo) $content .= '<img src="' . $logo . '">';
   
-  // Request Password
+  // Request password
   if(isset($_GET['id'])) {
     $password = getPassword($_GET['id']);
-    $width = strlen($password) + 2;
+    // Show password
     if($password !== null) {
+      $width = strlen($password) + 2;
       removeRecord($_GET['id']);
       $content .= '<h2>Your Password</h2>';
       $content .= 'Make sure to store your password safely.<br/><br/>';
       $content .= '<textarea cols="' . $width . '" onfocus="this.select();">' . $password . '</textarea><br/><br/>';
       $content .= 'The password has been removed permanently, after leaving this page you won\'t be able to show the password again.<br/>';
     }
+    // Password unavailable
     else {
       $content .= '<h2>Password Unavailable</h2>';
       $content .= 'Your password is not available anymore.<br/>';
@@ -32,10 +34,11 @@
     }
   }
 
-  // Generate Link Form
+  // Generate-link form
   else {
     $content .= '<h2>Generate Password Link</h2>';
     $content .= '<form method="post"><input type="text" name="password" placeholder="password" required> <input type="submit" value="Generate Link"></form>';
+    // Generate/show link
     if(isset($_POST['password'])) {
       $password = $_POST['password'];
       $id = generateRandomString();
@@ -77,7 +80,6 @@
     global $jsonFile;
     $json = file_get_contents($jsonFile);
     $db = json_decode($json);
-    //die(print_r($db));
     return $db;
   }
   
@@ -86,12 +88,6 @@
     file_put_contents($jsonFile, json_encode($db));
   }
   
-  function addRecord($array) {
-    $db = loadDatabase();
-    array_push($db, $array);
-    storeDatabase($db);
-  }
-
   function generateLink($id) {
     $proto = $_SERVER['HTTPS'] == "on" ? "https://" : "http://";
     return $proto . $_SERVER['HTTP_HOST'] . "/?id=" . $id;
@@ -100,6 +96,12 @@
   function getPassword($id) {
     $r = getRecord($id);
     return $r ? $r->password : null;
+  }
+
+  function addRecord($array) {
+    $db = loadDatabase();
+    array_push($db, $array);
+    storeDatabase($db);
   }
 
   function getRecord($id) {
