@@ -1,8 +1,10 @@
 <?php
+
   // Config
   $jsonFile = 'otpl.json';
   $expireDays = 7;
-  $title = "One Time Password Link";
+  $title = 'One Time Password Link';
+  $logo = 'logo.png';
 
   // Init
   if(!file_exists($jsonFile)) file_put_contents($jsonFile,"[]");
@@ -44,69 +46,70 @@
     <title><?php echo $title; ?></title>
   </head>
   <body>
+    <img src="<?php echo $logo; ?>">
     <?php echo $content; ?>
   </body>
 </html>
 <?php
 
-function generateRandomString($length = 64) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    return $randomString;
-}
-
-function addPassword($id, $password, $expires) {
-  addRecord(array('id' => $id, 'password' => $password, 'expires' => $expires));
-}
-
-function addRecord($array) {
-  global $jsonFile;
-  $json = file_get_contents($jsonFile);
-  $db = json_decode($json);
-  array_push($db, $array);
-  file_put_contents($jsonFile, json_encode($db));
-}
-
-function generateLink($id) {
-  $proto = $_SERVER['HTTPS'] == "on" ? "https://" : "http://";
-  return $proto . $_SERVER['HTTP_HOST'] . "/?id=" . $id;
-}
-
-function getPassword($id) {
-  $r = getRecord($id);
-  return $r ? $r->password : null;
-}
-
-function getRecord($id) {
-  global $jsonFile;
-  $json = file_get_contents($jsonFile);
-  $db = json_decode($json);
-  $record = null;
-  foreach($db as $r) {
-    if ($r->id == $id) {
-        $record = $r;
-        break;
-    }
+  function generateRandomString($length = 64) {
+      $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      $charactersLength = strlen($characters);
+      $randomString = '';
+      for ($i = 0; $i < $length; $i++) {
+          $randomString .= $characters[rand(0, $charactersLength - 1)];
+      }
+      return $randomString;
   }
-  return $record;
-}
 
-function removeRecord($id) {
-  global $jsonFile;
-  $json = file_get_contents($jsonFile);
-  $db = json_decode($json, true);
-  $key = null;
-  foreach($db as $k => $v) {
-    if ($v['id'] == $id) {
-        $key = $k;
-        break;
-    }
+  function addPassword($id, $password, $expires) {
+    addRecord(array('id' => $id, 'password' => $password, 'expires' => $expires));
   }
-  unset($db[$key]);
-  file_put_contents($jsonFile, json_encode($db));
-}
+
+  function addRecord($array) {
+    global $jsonFile;
+    $json = file_get_contents($jsonFile);
+    $db = json_decode($json);
+    array_push($db, $array);
+    file_put_contents($jsonFile, json_encode($db));
+  }
+
+  function generateLink($id) {
+    $proto = $_SERVER['HTTPS'] == "on" ? "https://" : "http://";
+    return $proto . $_SERVER['HTTP_HOST'] . "/?id=" . $id;
+  }
+
+  function getPassword($id) {
+    $r = getRecord($id);
+    return $r ? $r->password : null;
+  }
+
+  function getRecord($id) {
+    global $jsonFile;
+    $json = file_get_contents($jsonFile);
+    $db = json_decode($json);
+    $record = null;
+    foreach($db as $r) {
+      if ($r->id == $id) {
+          $record = $r;
+          break;
+      }
+    }
+    return $record;
+  }
+
+  function removeRecord($id) {
+    global $jsonFile;
+    $json = file_get_contents($jsonFile);
+    $db = json_decode($json, true);
+    $key = null;
+    foreach($db as $k => $v) {
+      if ($v['id'] == $id) {
+          $key = $k;
+          break;
+      }
+    }
+    unset($db[$key]);
+    file_put_contents($jsonFile, json_encode($db));
+  }
 
