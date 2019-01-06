@@ -7,7 +7,7 @@ require('otpl.config.php');
 if(!file_exists($jsonFile)) file_put_contents($jsonFile,"[]");
 removeExpired($expireDays);
 $content = null;
-if($logo) $content .= '<img src="' . $logo . '">';
+if($logo) $content .= '<img src="'.$logo.'">';
 
 // Request password
 if(isset($_GET['id'])) {
@@ -16,24 +16,32 @@ if(isset($_GET['id'])) {
   if($password !== null) {
     $width = strlen($password) + 2;
     removeRecord($_GET['id']);
-    $content .= '<h2>Your Password</h2>';
-    $content .= 'Make sure to store your password safely.<br/><br/>';
-    $content .= '<textarea cols="' . $width . '" onfocus="this.select();">' . $password . '</textarea><br/><br/>';
-    $content .= 'The password has been removed permanently, after leaving this page you won\'t be able to show the password again.<br/>';
+    $content .= '<h2>Your Password</h2>'.
+      'Make sure to store your password safely.<br/><br/>'.
+      '<textarea cols="'.$width.'" onfocus="this.select();">'.
+      $password.'</textarea><br/><br/>'.
+      'The password has been removed permanently, '.
+      'after leaving this page you won\'t be able to show the password again.'.
+      '<br/>';
   }
   // Password unavailable
   else {
-    $content .= '<h2>Password Unavailable</h2>';
-    $content .= 'Your password is not available anymore.<br/>';
-    $content .= 'The password links can only be used once and will expire after ' . $expireDays . ' days.<br/>';
-    $content .= 'Place contact <a href="mailto:' . $email . '" target="_blank">' . $email . '</a> to request a new password.';
+    $content .= '<h2>Password Unavailable</h2>'.
+      'Your password is not available anymore.<br/>'.
+      'The password links can only be used once and will expire after '.
+      $expireDays.' days.<br/>'.
+      'Place contact '.
+      '<a href="mailto:'.$email.'" target="_blank">'.$email.'</a> '.
+      'to request a new password.';
   }
 }
 
 // Generate-link form
 else {
-  $content .= '<h2>Generate Password Link</h2>';
-  $content .= '<form method="post"><input type="text" name="password" placeholder="password" required> <input type="submit" value="Generate Link"></form>';
+  $content .= '<h2>Generate Password Link</h2>'.
+    '<form method="post">'.
+    '<input type="text" name="password" placeholder="password" required> '.
+    '<input type="submit" value="Generate Link"></form>';
   // Generate/show link
   if(isset($_POST['password'])) {
     $password = $_POST['password'];
@@ -42,7 +50,8 @@ else {
     addPassword($id, $password, $expires);
     $link = generateLink($id);
     $width = strlen($link) + 2;
-    $content .= '<textarea cols="' . $width . '" onfocus="this.select();">' . $link . '</textarea>';
+    $content .= '<textarea cols="'.$width.'" onfocus="this.select();">'.
+      $link.'</textarea>';
   }
 }
 
@@ -69,7 +78,8 @@ function removeExpired($expireDays) {
 }
 
 function generateRandomString($length = 32) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyz'.
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
@@ -79,7 +89,7 @@ function generateRandomString($length = 32) {
 }
 
 function addPassword($id, $password, $expires) {
-  addRecord(array('id' => $id, 'password' => $password, 'expires' => $expires));
+  addRecord(array('id'=>$id, 'password'=>$password, 'expires'=>$expires));
 }
 
 function loadDatabase() {
@@ -96,7 +106,7 @@ function storeDatabase($db) {
 
 function generateLink($id) {
   $proto = $_SERVER['HTTPS'] == "on" ? "https://" : "http://";
-  return $proto . $_SERVER['HTTP_HOST'] . "/?id=" . $id;
+  return $proto.$_SERVER['HTTP_HOST']."/?id=".$id;
 }
 
 function getPassword($id) {
