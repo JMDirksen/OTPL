@@ -78,12 +78,11 @@ function removeExpired($expireDays) {
 }
 
 function generateRandomString($length = 32) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyz'.
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
+    $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charsLength = strlen($chars);
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
+        $randomString .= $chars[rand(0, $charsLength - 1)];
     }
     return $randomString;
 }
