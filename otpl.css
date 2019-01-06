@@ -3,7 +3,7 @@ body {
   color:        gray;
 }
 
-textarea {
+input[type="text"], textarea {
   font-family:  "Courier New", monospace;
   font-weight:  bold;
 }

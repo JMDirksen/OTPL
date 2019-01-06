@@ -40,8 +40,9 @@ if(isset($_GET['id'])) {
 else {
   $content .= '<h2>Generate Password Link</h2>'.
     '<form method="post">'.
-    '<input type="text" name="password" placeholder="password" required> '.
-    '<input type="submit" value="Generate Link"></form>';
+    '<input type="text" id="password" name="password" placeholder="password" onfocus="this.select();" required> '.
+    '<input type="button" value="Random password" onClick="generatePassword();"> '.
+    '<input type="submit" value="Generate link"></form>';
   // Generate/show link
   if(isset($_POST['password'])) {
     $password = $_POST['password'];
@@ -60,6 +61,7 @@ else {
   <head>
     <title><?php echo $title; ?></title>
     <link rel="stylesheet" type="text/css" href="<?php echo $cssFile; ?>">
+    <script src="otpl.js"></script>
   </head>
   <body>
     <?php echo $content; ?>
