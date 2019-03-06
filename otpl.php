@@ -60,7 +60,8 @@ else {
 <html>
   <head>
     <title><?php echo $title; ?></title>
-    <link rel="stylesheet" type="text/css" href="<?php echo $cssFile; ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo $cssFile; ?>" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <script src="otpl.js"></script>
   </head>
   <body>
