@@ -1,3 +1,6 @@
+# Important
+Make sure the file `otpl.json` is not accessible from the internet, it will contain the stored passwords in plain text.
+
 # Setup
     su -
     
@@ -15,7 +18,7 @@
       <Directory /var/www/otpl/>
         Require all granted
         DirectoryIndex otpl.php
-        <Files "*json">
+        <Files "*.json">
           Require all denied
         </Files>
       </Directory>
