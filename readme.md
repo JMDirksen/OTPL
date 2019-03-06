@@ -1,0 +1,27 @@
+# Setup
+    su -
+    
+    apt install -y git libapache2-mod-php
+    
+    git clone https://github.com/JeftaDirksen/OTPL.git /var/www/otpl
+    cp /var/www/otpl/otpl.config.example.php /var/www/otpl/otpl.config.php
+    chown -R www-data /var/www/otpl
+    
+    cat >/etc/apache2/sites-available/otpl.conf <<EOL
+    <VirtualHost *:80>
+      DocumentRoot /var/www/otpl
+      ErrorLog \${APACHE_LOG_DIR}/error.log
+      CustomLog \${APACHE_LOG_DIR}/access.log combined
+      <Directory /var/www/otpl/>
+        Require all granted
+        DirectoryIndex otpl.php
+        <Files "*json">
+          Require all denied
+        </Files>
+      </Directory>
+    </VirtualHost>
+    EOL
+    
+    a2ensite otpl.conf
+    a2dissite 000-default.conf
+    systemctl reload apache2
