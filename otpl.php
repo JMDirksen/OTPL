@@ -41,7 +41,7 @@ else {
   $content .= '<h2>Generate Password Link</h2>'.
     '<form method="post">'.
     '<input type="text" id="password" name="password" placeholder="password" onfocus="this.select();" required> '.
-    '<input type="button" value="Random password" onClick="generatePassword();"> '.
+    '<input type="button" value="Random password" onClick="generatePassword(); document.getElementById(\'link\').value = \'\';"> '.
     '<input type="submit" value="Generate link"></form>';
   // Generate/show link
   if(isset($_POST['password'])) {
@@ -51,7 +51,7 @@ else {
     addPassword($id, $password, $expires);
     $link = generateLink($id);
     $width = strlen($link) + 2;
-    $content .= '<textarea cols="'.$width.'" onfocus="this.select();">'.
+    $content .= '<textarea id="link" cols="'.$width.'" onfocus="this.select();">'.
       $link.'</textarea>';
   }
 }
