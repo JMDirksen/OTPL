@@ -11,28 +11,38 @@ if($logo) $content .= '<img src="'.$logo.'">';
 
 // Request password
 if(isset($_GET['id'])) {
-  $password = getPassword($_GET['id']);
-  // Show password
-  if($password !== null) {
-    $width = strlen($password) + 2;
-    removeRecord($_GET['id']);
-    $content .= '<h2>Your Password</h2>'.
-      'Make sure to store your password safely.<br/><br/>'.
-      '<textarea cols="'.$width.'" onfocus="this.select();">'.
-      $password.'</textarea><br/><br/>'.
-      'The password has been removed permanently, '.
-      'after leaving this page you won\'t be able to show the password again.'.
-      '<br/>';
+  if(isset($_GET['show'])) {
+  
+	  $password = getPassword($_GET['id']);
+	  // Show password
+	  if($password !== null) {
+		$width = strlen($password) + 2;
+		removeRecord($_GET['id']);
+		$content .= '<h2>Your Password</h2>'.
+		  'Make sure to store your password safely.<br/><br/>'.
+		  '<textarea cols="'.$width.'" onfocus="this.select();">'.
+		  $password.'</textarea><br/><br/>'.
+		  'The password has been removed permanently, '.
+		  'after leaving this page you won\'t be able to show the password again.'.
+		  '<br/>';
+	  }
+	  // Password unavailable
+	  else {
+		$content .= '<h2>Password Unavailable</h2>'.
+		  'Your password is not available anymore.<br/>'.
+		  'The password links can only be used once and will expire after '.
+		  $expireDays.' days.<br/>'.
+		  'Place contact '.
+		  '<a href="mailto:'.$email.'" target="_blank">'.$email.'</a> '.
+		  'to request a new password.';
+	  }
   }
-  // Password unavailable
   else {
-    $content .= '<h2>Password Unavailable</h2>'.
-      'Your password is not available anymore.<br/>'.
-      'The password links can only be used once and will expire after '.
-      $expireDays.' days.<br/>'.
-      'Place contact '.
-      '<a href="mailto:'.$email.'" target="_blank">'.$email.'</a> '.
-      'to request a new password.';
+    $content .= '<h2>Your Password</h2>'.
+      'The password can only be showed once.<br/>'.
+	  'Show password now?<br/><br/>'.
+      '<button onClick="location.href=\'?id='.$_GET['id'].'&show\';">Show password</button><br/><br/>'.
+      '<br/>';
   }
 }
 
