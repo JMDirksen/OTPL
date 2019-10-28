@@ -1,7 +1,11 @@
 # Important
-Make sure the file `otpl.json` is not accessible from the internet, it will contain the stored passwords in plain text.
+Make sure the file `otpl.json` or `db.json` is not accessible from the internet, it will contain the stored passwords in plain text.
 
-# Setup
+# Docker setup
+    docker build -t otpl .
+    docker run -d -p 80:80 otpl
+
+# Manual setup on linux
     su -
     
     apt install -y git libapache2-mod-php
