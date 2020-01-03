@@ -7,7 +7,7 @@ WORKDIR /var/www/localhost/htdocs
 COPY src/ /var/www/localhost/htdocs/
 RUN rm /var/www/localhost/htdocs/index.html
 RUN mkdir /otpl
-RUN chown daemon:daemon /otpl
+RUN chown apache:apache /otpl
 
 EXPOSE 80
 
