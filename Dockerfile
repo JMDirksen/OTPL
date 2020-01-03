@@ -8,7 +8,15 @@ RUN chown apache:apache /otpl
 
 WORKDIR /var/www/localhost/htdocs
 COPY src/ .
+COPY src/otpl.config.example.php ./otpl.config.php
 RUN rm index.html
+
+ENV EMAIL=admin@domain.com
+ENV EXPIRE_DAYS=7
+ENV PAGE_TITLE="One Time Password Link"
+ENV LOGO=logo.png
+ENV CSS=otpl.css
+ENV JSON=/otpl/otpl.json
 
 EXPOSE 80
 
