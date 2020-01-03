@@ -5,6 +5,7 @@ RUN apk update && apk upgrade && apk add apache2 php7 php7-apache2 php7-json
 
 RUN mkdir /otpl
 RUN chown apache:apache /otpl
+VOLUME /otpl
 
 WORKDIR /var/www/localhost/htdocs
 COPY src/ .
