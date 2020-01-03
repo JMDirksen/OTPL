@@ -1,36 +1,20 @@
 # Important
-Make sure the file `otpl.json` or `db.json` is not accessible from the internet, it will contain the stored passwords in plain text.
+Make sure the file `otpl.json` is not accessible publicly, it will contain the stored passwords in plain text.
 
-# Docker setup
+# Docker run
+    docker run -d -p 80:80 -e EMAIL=your@email.com jeftadirksen/otpl
+
+# Docker build
     git clone https://github.com/JeftaDirksen/OTPL.git
     cd OTPL
     docker build -t otpl .
-    docker run -d -p 80:80 otpl
+    docker run -d -p 80:80 -e EMAIL=your@email.com otpl
 
-# Manual setup on linux
-    su -
-    
-    apt install -y git libapache2-mod-php
-    
-    git clone https://github.com/JeftaDirksen/OTPL.git /var/www/otpl
-    cp /var/www/otpl/src/otpl.config.example.php otpl.config.php
-    chown -R www-data /var/www/otpl
-    
-    cat >/etc/apache2/sites-available/otpl.conf <<EOL
-    <VirtualHost *:80>
-      DocumentRoot /var/www/otpl/src
-      ErrorLog \${APACHE_LOG_DIR}/error.log
-      CustomLog \${APACHE_LOG_DIR}/access.log combined
-      <Directory /var/www/otpl/src/>
-        Require all granted
-        DirectoryIndex otpl.php
-        <Files "*.json">
-          Require all denied
-        </Files>
-      </Directory>
-    </VirtualHost>
-    EOL
-    
-    a2ensite otpl.conf
-    a2dissite 000-default.conf
-    systemctl reload apache2
+# ENV / VOLUME
+    ENV EMAIL=admin@domain.com
+    ENV EXPIRE_DAYS=7
+    ENV PAGE_TITLE="One Time Password Link"
+    ENV LOGO=logo.png
+    ENV CSS=otpl.css
+    ENV JSON=/otpl/otpl.json
+    VOLUME /otpl
