@@ -1,13 +1,14 @@
 FROM alpine:3.11
 MAINTAINER Jefta Dirksen <jeftadirksen@gmail.com>
 
-RUN apk update && apk upgrade && apk add apache2 php7 php7-apache2 php7-json bash
+RUN apk update && apk upgrade && apk add apache2 php7 php7-apache2 php7-json
 
-WORKDIR /var/www/localhost/htdocs
-COPY src/ /var/www/localhost/htdocs/
-RUN rm /var/www/localhost/htdocs/index.html
 RUN mkdir /otpl
 RUN chown apache:apache /otpl
+
+WORKDIR /var/www/localhost/htdocs
+COPY src/ .
+RUN rm index.html
 
 EXPOSE 80
 
