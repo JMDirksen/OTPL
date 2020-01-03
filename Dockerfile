@@ -1,16 +1,15 @@
-FROM php:7.3-apache
+FROM alpine:3.11
+MAINTAINER Jefta Dirksen <jeftadirksen@gmail.com>
 
-COPY src/ /var/www/html/
+RUN apk update && apk upgrade && apk add apache2 php7 php7-apache2 php7-json bash
 
-RUN echo "<?php\n \
-    \$email      = 'admin@domain.com';\n \
-    \$expireDays = 7;\n \
-    \$title      = 'One Time Password Link';\n \
-    \$logo       = 'logo.png';\n \
-    \$cssFile    = 'otpl.css';\n \
-    \$jsonFile   = '/otpl/db.json';\n" > /var/www/html/otpl.config.php
-
+WORKDIR /var/www/localhost/htdocs
+COPY src/ /var/www/localhost/htdocs/
+RUN rm /var/www/localhost/htdocs/index.html
 RUN mkdir /otpl
-RUN chown www-data:www-data /otpl
+RUN chown daemon:daemon /otpl
 
 EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/httpd"]
+CMD ["-D", "FOREGROUND"]
