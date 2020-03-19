@@ -59,10 +59,8 @@ else {
         $id = generateRandomString();
         $expires = date("Y-m-d H:i", strtotime("+$expireDays day"));
         addPassword($id, $password, $expires);
-        $link = generateLink($id);
-        $width = strlen($link) + 2;
-        $content .= '<textarea id="link" cols="'.$width.'" onfocus="this.select();">'.
-        $link.'</textarea>';
+        $content .= '<textarea id="link" cols="60" onfocus="this.select();"></textarea>';
+        $content .= '<script>generateLink(\''.$id.'\');</script>';
     }
 }
 
@@ -114,11 +112,6 @@ function loadDatabase() {
 function storeDatabase($db) {
     global $jsonFile;
     file_put_contents($jsonFile, json_encode(array_values($db)));
-}
-
-function generateLink($id) {
-    $proto = $_SERVER['HTTPS'] == "on" ? "https://" : "http://";
-    return $proto.$_SERVER['HTTP_HOST']."/?id=".$id;
 }
 
 function getPassword($id) {

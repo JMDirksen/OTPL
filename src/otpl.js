@@ -9,6 +9,12 @@ function generatePassword(fieldId = "password", format = "Abcde##$") {
   document.getElementById(fieldId).value = password;
 }
 
+function generateLink(id, fieldId = "link") {
+  link = location.origin + '/?id=' + id;
+  document.getElementById(fieldId).cols = link.length + 2;
+  document.getElementById(fieldId).innerHTML = link;
+}
+
 function isUpperCase(character) {
   if(character == character.toUpperCase()) return true;
   else return false;
