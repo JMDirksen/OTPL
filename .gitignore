@@ -1,2 +1,3 @@
 *.json
 otpl.config.php
+src/web.config
