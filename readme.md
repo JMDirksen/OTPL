@@ -2,10 +2,10 @@
 Make sure the file `otpl.json` is not accessible publicly, it will contain the stored passwords in plain text.
 
 # Docker run
-    docker run -d -p 80:80 -e EMAIL=your@email.com jeftadirksen/otpl
+    docker run -d -p 80:80 -e EMAIL=your@email.com jmdirksen/otpl
 
 # Docker build
-    git clone https://github.com/JeftaDirksen/OTPL.git
+    git clone https://github.com/JMDirksen/OTPL.git
     cd OTPL
     docker build -t otpl .
     docker run -d -p 80:80 -e EMAIL=your@email.com otpl
