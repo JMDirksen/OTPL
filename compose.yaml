@@ -1,0 +1,14 @@
+services:
+  app:
+    image: php:8-apache
+    ports:
+      - "8080:80"
+    environment:
+      - EMAIL=admin@domain.com
+      - EXPIRE_DAYS=7
+      - PAGE_TITLE=One Time Password Link
+      - LOGO=logo.png
+      - CSS=otpl.css
+      - JSON=/otpl/otpl.json
+    volumes:
+      - ./src:/var/www/html
